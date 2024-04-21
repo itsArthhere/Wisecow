@@ -31,6 +31,7 @@ jobs:
         uses: azure/k8s-set-context@v1
         with:
           method: kubeconfig
+          k8s-url: https://127.0.0.1:53432
           kubeconfig: ${{ secrets.KUBECONFIG }}
 
       - name: Deploy to Kubernetes
