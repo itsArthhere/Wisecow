@@ -1,4 +1,4 @@
-name: CI/CD
+name: Deploy to Kubernetes
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,13 +27,11 @@ jobs:
           docker tag wisecow itsarth/wisecow:latest
           docker push itsarth/wisecow:latest
 
-    #  - name: Set up Kubernetes
-    #    uses: azure/k8s-set-context@v1
-    #    with:
-       #   method: kubeconfig
-      #    k8s-url: https://127.0.0.1:53432
-     #     kubeconfig: ${{ secrets.KUBECONFIG }}
+      - name: Start Minikube
+        id: minikube
+        uses: medyagh/setup-minikube@latest
 
-    #  - name: Deploy to Kubernetes
-    #    run: |
-    #      kubectl apply -f wisecow-deployment.yaml -f wisecow-service.yaml
+      - name: Set up Kubernetes context
+        run: |
+          minikube kubectl -- get pods 
+          minikube kubectl -- apply -f wisecow-deployment.yaml -f wisecow-service.yaml
